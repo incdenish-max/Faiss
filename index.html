@@ -1,10 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<title>Netha</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awas Di-Rush Zombie! 🧟‍♂️</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            /* Langit malam yang agak spooky tapi lucu */
+            background-color: #2c2c54; 
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            position: relative;
+        }
+        /* Bulan Purnama */
+        .bulan {
+            position: absolute;
+            top: 10%;
+            right: 15%;
+            width: 80px;
+            height: 80px;
+            background-color: #f1c40f;
+            border-radius: 50%;
+            box-shadow: 0 0 40px #f1c40f;
+            z-index: 0;
+        }
+        /* Tanah Hijau Gelap / Rawa */
+        .tanah {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 25vh;
+            background-color: #2d401e;
+            border-top: 15px solid #1a2610;
+            z-index: 1;
+        }
+        /* Kotak Teks Utama */
+        .container {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            border: 5px dashed #8e44ad;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            /* Efek panik/goyang */
+            animation: goyang 1s infinite alternate;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        /* Tombol Serangan */
+        .btn-musik {
+            background: #e67e22;
+            color: white;
+            border: 3px solid #d35400;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 0 #d35400;
+            transition: 0.1s;
+        }
+        .btn-musik:active {
+            transform: translateY(8px);
+            box-shadow: 0 0 0 #d35400;
+        }
+
+        /* --- Elemen Animasi Zombie & Perang --- */
+        .pasukan {
+            position: absolute;
+            font-size: 4rem;
+            z-index: 5;
+            white-space: nowrap;
+        }
+        .heli {
+            top: 15%;
+            left: -30%;
+            animation: terbangKiri 8s linear infinite;
+        }
+        .kejar-kejaran {
+            bottom: 15vh; /* Berlari di atas tanah */
+            left: -50%;
+            animation: lariKanan 6s linear infinite;
+            z-index: 2;
+        }
+        .batu {
+            bottom: 20vh;
+            right: 20%;
+            font-size: 3rem;
+            z-index: 3;
+        }
+
+        /* --- Keyframes Animasi --- */
+        @keyframes goyang {
+            0% { transform: rotate(-2deg) scale(0.98); }
+            100% { transform: rotate(2deg) scale(1.02); }
+        }
+        @keyframes terbangKiri {
+            0% { transform: translateX(130vw) scaleX(-1); }
+            100% { transform: translateX(-30vw) scaleX(-1); }
+        }
+        @keyframes lariKanan {
+            0% { transform: translateX(-40vw); }
+            100% { transform: translateX(140vw); }
+        }
+    </style>
 </head>
 <body>
-<h1>Website Pertama Netha</h1>
-<p>Dream • Build • Evolve</p>
+
+    <!-- Latar Belakang Malam -->
+    <div class="bulan"></div>
+    <div class="tanah"></div>
+
+    <!-- Animasi Pasukan Bergerak menggunakan Emoji -->
+    <div class="pasukan heli">🚁📦☁️</div>
+    <div class="pasukan kejar-kejaran">🏃‍♂️🍳 💨 🧟‍♂️🧟‍♀️🧟‍♂️</div>
+    <div class="pasukan batu">🪨🌿</div>
+
+    <div class="container">
+        <h1>Awas Di-Rush Zombie! 🧟‍♂️🍳</h1>
+        <p>Bertahan 15 detik biar nggak balik ke lobby!</p>
+        
+        <!-- Tombol Trigger -->
+        <button class="btn-musik" id="tombolPlay">🏃‍♂️ LARI ADA ZOMBIE!!!</button>
+    </div>
+
+    <!-- AUDIO PLAYER -->
+    <audio id="laguBackground">
+        <!-- Suara lari kepanikan lucu (gratis dari Mixkit) -->
+        <source src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audio = document.getElementById('laguBackground');
+        const tombol = document.getElementById('tombolPlay');
+        let timer; // Hitungan mundur 15 detik
+
+        tombol.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+                tombol.innerText = "🫣 NGUMPET DI RUMPUT... (Tahan!)";
+                tombol.style.background = "#27ae60"; /* Hijau aman */
+                tombol.style.borderColor = "#1e8449";
+                tombol.style.boxShadow = "0 8px 0 #1e8449";
+
+                // Otomatis berhenti tepat setelah 15 detik
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    audio.pause();
+                    audio.currentTime = 0; 
+                    tombol.innerText = "🏃‍♂️ LARI ADA ZOMBIE!!!";
+                    tombol.style.background = "#e67e22"; 
+                    tombol.style.borderColor = "#d35400";
+                    tombol.style.boxShadow = "0 8px 0 #d35400";
+                }, 15000); 
+                
+            } else {
+                // Hentikan manual sebelum 15 detik
+                audio.pause();
+                audio.currentTime = 0;
+                clearTimeout(timer);
+                tombol.innerText = "🏃‍♂️ LARI ADA ZOMBIE!!!";
+                tombol.style.background = "#e67e22";
+                tombol.style.borderColor = "#d35400";
+                tombol.style.boxShadow = "0 8px 0 #d35400";
+            }
+        });
+    </script>
 </body>
 </html>
